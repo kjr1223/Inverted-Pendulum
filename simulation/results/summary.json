@@ -1,0 +1,424 @@
+{
+  "WARNING": "SIMULATION ONLY - ASSUMED PARAMETERS - NOT VALIDATED ON HARDWARE",
+  "params": {
+    "m_p": {
+      "value": 0.1,
+      "source": "CODE",
+      "note": "sketch_jul5b MASS=0.10 (반올림값, 실측 여부 불명)"
+    },
+    "L_p": {
+      "value": 0.4,
+      "source": "CODE",
+      "note": "sketch_jul5b LEN=0.40, 균일봉 가정"
+    },
+    "c_p": {
+      "value": 0.0005,
+      "source": "ASSUMED",
+      "note": "피벗 마찰, TEST 4 자유진동 감쇠로 식별 예정"
+    },
+    "g": {
+      "value": 9.81,
+      "source": "PHYSICS",
+      "note": ""
+    },
+    "M_eq": {
+      "value": 3.0,
+      "source": "ASSUMED",
+      "note": "카트 질량 + 모터 반사관성, 미측정"
+    },
+    "tau_m": {
+      "value": 0.04,
+      "source": "ASSUMED",
+      "note": "모터 스텝응답으로 식별 예정"
+    },
+    "v_max": {
+      "value": 0.6,
+      "source": "ASSUMED",
+      "note": "PWM 255 무부하 카트 속도, 스텝응답으로 식별 예정"
+    },
+    "b_c": {
+      "value": 0.0,
+      "source": "ASSUMED",
+      "note": "추가 카트 마찰"
+    },
+    "pwm_max": {
+      "value": 255.0,
+      "source": "CODE",
+      "note": "analogWrite 0..255"
+    },
+    "deadzone_pwm": {
+      "value": 0.0,
+      "source": "ASSUMED",
+      "note": "기본 0. 코드 주석의 MIN_PWM=100/120 은 TEST 5 로 확인 예정"
+    },
+    "counts_per_m": {
+      "value": 7971.0,
+      "source": "CODE",
+      "note": "jul5b 주석 1100 count≈13.8 cm, TEST 2 로 확인 예정"
+    },
+    "pot_up": {
+      "value": 576,
+      "source": "CODE",
+      "note": "sketch_jul5a POT_VAL_UP, TEST 1 로 확인 예정"
+    },
+    "pot_down": {
+      "value": 40,
+      "source": "CODE",
+      "note": "sketch_jul5a POT_VAL_DOWN, TEST 1 로 확인 예정"
+    },
+    "x_limit": {
+      "value": 0.25,
+      "source": "ASSUMED",
+      "note": "레일 길이 미측정"
+    },
+    "Ts": {
+      "value": 0.005,
+      "source": "CODE",
+      "note": "sketch_jul5a LOOP_US=5000, TEST 3 로 실제 dt 확인 예정"
+    }
+  },
+  "A": [
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      -24.79338842975207,
+      -0.24322314049586785,
+      0.0006198347107438017
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      0.0,
+      92.97520661157024,
+      37.69958677685951,
+      -0.09607438016528924
+    ]
+  ],
+  "B": [
+    [
+      0.0
+    ],
+    [
+      0.0583373845405931
+    ],
+    [
+      0.0
+    ],
+    [
+      -0.2187651920272241
+    ]
+  ],
+  "Ad": [
+    [
+      1.0,
+      0.004702502460062642,
+      -2.918217555281211e-06,
+      2.5232799404129084e-09
+    ],
+    [
+      0.0,
+      0.8834092645182761,
+      -0.0011436622899149045,
+      -3.6857257325249966e-09
+    ],
+    [
+      0.0,
+      0.001115526588410248,
+      1.0004707495860024,
+      0.0049995851085812785
+    ],
+    [
+      0.0,
+      0.4371797744323027,
+      0.1882109707691147,
+      0.999991108987712
+    ]
+  ],
+  "Bd": [
+    [
+      6.999942116173115e-07
+    ],
+    [
+      0.0002743311423099388
+    ],
+    [
+      -2.624768443318231e-06
+    ],
+    [
+      -0.0010286582927818888
+    ]
+  ],
+  "Q": [
+    [
+      99.99999999999999,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      4.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      131.31225400046978,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "R": [
+    [
+      1.5378700499807768e-05
+    ]
+  ],
+  "K": [
+    [
+      -2207.5691446028795,
+      -2028.5527110822595,
+      -5161.770824828628,
+      -767.0001779435502
+    ]
+  ],
+  "bryson_default": {
+    "x_max": 0.1,
+    "xd_max": 0.5,
+    "th_max": 0.08726646259971647,
+    "thd_max": 1.0,
+    "u_max": 255.0
+  },
+  "results": {
+    "ideal_theta2": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 2.0,
+      "x_max_m": 0.015600603813204545,
+      "xd_max_mps": 0.12780934392720972,
+      "thd_max_radps": 0.44199190222036017,
+      "u_raw_max": 180.17979225328605,
+      "u_cmd_max": 180.17979225328605,
+      "sat_fraction": 0.0,
+      "sat_time_s": 0.0,
+      "theta_final_deg": 0.0002174297508928021,
+      "x_final_m": 7.66204764409012e-07,
+      "theta_settle_s(0.5deg)": 0.3350000000000002,
+      "x_settle_s(5mm)": 1.0000000000000007,
+      "norm_head": 0.5919595498841282,
+      "norm_tail": 4.812275657448722e-05,
+      "check_theta_to_0": true,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": false,
+      "PASS": true
+    },
+    "ideal_theta5": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 5.0,
+      "x_max_m": 0.039244982154946,
+      "xd_max_mps": 0.32131844330268944,
+      "thd_max_radps": 1.1077312509305535,
+      "u_raw_max": 450.4494806332151,
+      "u_cmd_max": 450.4494806332151,
+      "sat_fraction": 0.0,
+      "sat_time_s": 0.0,
+      "theta_final_deg": 0.0005473987443084783,
+      "x_final_m": 1.92678865245508e-06,
+      "theta_settle_s(0.5deg)": 0.5300000000000004,
+      "x_settle_s(5mm)": 1.314999999999994,
+      "norm_head": 1.4825417259831646,
+      "norm_tail": 0.00012117387474687533,
+      "check_theta_to_0": true,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": false,
+      "PASS": true
+    },
+    "ideal_theta10": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 10.0,
+      "x_max_m": 0.08026736287849545,
+      "xd_max_mps": 0.6556629385276109,
+      "thd_max_radps": 2.2352359577444405,
+      "u_raw_max": 900.8989612664302,
+      "u_cmd_max": 900.8989612664302,
+      "sat_fraction": 0.0,
+      "sat_time_s": 0.0,
+      "theta_final_deg": 0.001122581297087861,
+      "x_final_m": 3.9357921666086536e-06,
+      "theta_settle_s(0.5deg)": 0.6200000000000004,
+      "x_settle_s(5mm)": 1.5099999999999898,
+      "norm_head": 2.9840909696549613,
+      "norm_tail": 0.0002486444631777324,
+      "check_theta_to_0": true,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": false,
+      "PASS": true
+    },
+    "saturated_theta2": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 2.0,
+      "x_max_m": 0.015600603813204545,
+      "xd_max_mps": 0.12780934392720972,
+      "thd_max_radps": 0.44199190222036017,
+      "u_raw_max": 180.17979225328605,
+      "u_cmd_max": 180.17979225328605,
+      "sat_fraction": 0.0,
+      "sat_time_s": 0.0,
+      "theta_final_deg": 0.0002174297508928021,
+      "x_final_m": 7.66204764409012e-07,
+      "theta_settle_s(0.5deg)": 0.3350000000000002,
+      "x_settle_s(5mm)": 1.0000000000000007,
+      "norm_head": 0.5919595498841282,
+      "norm_tail": 4.812275657448722e-05,
+      "check_theta_to_0": true,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": false,
+      "PASS": true
+    },
+    "saturated_theta5": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 5.0,
+      "x_max_m": 0.04059383694788581,
+      "xd_max_mps": 0.3242032221313296,
+      "thd_max_radps": 1.0965802525440989,
+      "u_raw_max": 450.4494806332151,
+      "u_cmd_max": 255.0,
+      "sat_fraction": 0.005,
+      "sat_time_s": 0.025,
+      "theta_final_deg": 0.0005773706498751527,
+      "x_final_m": 2.1457693919949472e-06,
+      "theta_settle_s(0.5deg)": 0.5450000000000004,
+      "x_settle_s(5mm)": 1.3349999999999935,
+      "norm_head": 1.4579436558211294,
+      "norm_tail": 0.00012821972050808839,
+      "check_theta_to_0": true,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": true,
+      "PASS": true
+    },
+    "saturated_theta10": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 10.0,
+      "x_max_m": 0.09954241128797175,
+      "xd_max_mps": 0.5648932028718653,
+      "thd_max_radps": 1.5752811988405593,
+      "u_raw_max": 900.8989612664302,
+      "u_cmd_max": 255.0,
+      "sat_fraction": 0.023,
+      "sat_time_s": 0.115,
+      "theta_final_deg": 0.0015931370445173994,
+      "x_final_m": 8.406153069583529e-06,
+      "theta_settle_s(0.5deg)": 1.449999999999991,
+      "x_settle_s(5mm)": 1.6149999999999876,
+      "norm_head": 2.1823058272358593,
+      "norm_tail": 0.00036172450032225363,
+      "check_theta_to_0": true,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": true,
+      "PASS": true
+    },
+    "sensor_theta2": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 2.0009412806491005,
+      "x_max_m": 0.02084331194274999,
+      "xd_max_mps": 0.20812525374770766,
+      "thd_max_radps": 0.7412858498726967,
+      "u_raw_max": 1156.933257059522,
+      "u_cmd_max": 255.0,
+      "sat_fraction": 0.421,
+      "sat_time_s": 2.105,
+      "theta_final_deg": 0.717041878522876,
+      "x_final_m": 0.005235666389483477,
+      "theta_settle_s(0.5deg)": Infinity,
+      "x_settle_s(5mm)": 4.744999999999921,
+      "norm_head": 0.8660903909707608,
+      "norm_tail": 0.7571909568461528,
+      "check_theta_to_0": false,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": true,
+      "PASS": false
+    },
+    "sensor_theta5": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 5.002350335892298,
+      "x_max_m": 0.05514136075505669,
+      "xd_max_mps": 0.3281249730956473,
+      "thd_max_radps": 1.0354073112405027,
+      "u_raw_max": 1294.1280465537725,
+      "u_cmd_max": 255.0,
+      "sat_fraction": 0.422,
+      "sat_time_s": 2.11,
+      "theta_final_deg": 0.8804223679359146,
+      "x_final_m": 0.01589738623088705,
+      "theta_settle_s(0.5deg)": 4.749999999999921,
+      "x_settle_s(5mm)": 4.754999999999921,
+      "norm_head": 1.355490837016021,
+      "norm_tail": 0.7106878658996899,
+      "check_theta_to_0": false,
+      "check_x_to_0": false,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": true,
+      "PASS": false
+    },
+    "sensor_theta10": {
+      "t_end": 4.994999999999916,
+      "fell": false,
+      "theta_max_deg": 10.00468026735419,
+      "x_max_m": 0.11594167657252594,
+      "xd_max_mps": 0.5351190676646905,
+      "thd_max_radps": 1.4677800383053463,
+      "u_raw_max": 1305.2416147681377,
+      "u_cmd_max": 255.0,
+      "sat_fraction": 0.43,
+      "sat_time_s": 2.15,
+      "theta_final_deg": 0.7332743650531504,
+      "x_final_m": 0.007895866101346119,
+      "theta_settle_s(0.5deg)": Infinity,
+      "x_settle_s(5mm)": 4.164999999999933,
+      "norm_head": 2.1768509364164035,
+      "norm_tail": 0.7110559792204953,
+      "check_theta_to_0": false,
+      "check_x_to_0": true,
+      "check_not_diverging": true,
+      "check_rail_ok": true,
+      "saturation_hit": true,
+      "PASS": false
+    }
+  }
+}
