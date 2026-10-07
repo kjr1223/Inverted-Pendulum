@@ -4,16 +4,22 @@
   이 스케치는 자동 balancing / swing-up / MPC / RL 을 전혀 실행하지 않는다.
   모터는 TEST 5 에서 사용자가 명령한 저출력 펄스로만 움직인다.
 
-  핀 / 각도식 / 엔코더 디코딩은 sketch_jul5a·jul5b 와 동일하게 유지한다
-  (측정 결과를 기존 코드의 부호 convention 에 그대로 대응시키기 위해).
-    PWM  D9  analogWrite (Mega Timer2, 약 490 Hz)
-    DIR  D8  digitalWrite
-    ENC  D2(A), D3(B)  CHANGE 인터럽트 x4
-    POT  A0  WDD35D4-5K
-    theta = (potUp - raw) * 180 / (potUp - potDown), ±180 wrap
+  핀 / 엔코더 디코딩 / 각도 부호는 현재 장비의 학부생 baseline 코드와 동일하게 맞춘다
+  (같은 장비에서 측정한 결과를 baseline 제어기의 부호 convention 에 그대로 대응시키기 위해).
+    PWM    D9  analogWrite (Mega Timer2, 약 490 Hz)
+    DIR    D8  digitalWrite
+    BRAKE  드라이버 BRAKE 는 GND 에 직접 연결 (D7 은 사용하지 않음)
+    ENC    A=D3, B=D2  CHANGE 인터럽트 x4  (오른쪽 이동 시 count 증가, 실측 확인)
+    POT    A0  WDD35D4-5K (양 끝 5V/GND, 가운데 A0)
+    theta = ANGLE_SIGN * (raw - potUp) * 180 / |potDown - potUp|, ±180 wrap
+            0 = 직립, ±180 = 하향
 
-  BTS7960 배선은 코드만으로 확정되지 않는다. 모든 배선 가정에서
-  "DIR=LOW + PWM=0" 이 정지 상태이므로 motorOff() 는 두 핀을 모두 LOW 로 둔다.
+  모터 드라이버: L298N 기반 PWM / DIR / BRAKE 방식 보드.
+  PWM=0 이면 DIR 과 무관하게 정지이므로 motorOff() 는 두 핀을 모두 LOW 로 둔다.
+
+  카트 거리 환산 (참고, 이 스케치는 count 만 출력한다):
+    nominal 1.11768e-4 m/count (13x20x4 CPR, 풀리 r=0.0185 m) x 실측 보정 0.440/0.465
+    = 약 1.0576e-4 m/count. 실제 레일 전체 이동 길이 0.440 m.
 
   Serial 250000 baud, 줄 단위 명령 (Newline). '?' 입력 시 도움말.
     0: IDLE   1: 센서 캘리브레이션   2: 엔코더 캘리브레이션
@@ -31,25 +37,29 @@
 // 1: TEST 5 사용 가능 (TEST 1~4 결과 확인 후에만 변경).
 #define ENABLE_MOTOR_TEST 0
 
-// ── 핀 (기존 스케치와 동일) ─────────────────────────────────────────────────
+// ── 핀 (현재 장비 배선, 학부생 baseline 코드와 동일) ─────────────────────────
 const uint8_t PWM_PIN = 9;   // Mega: PH6 / OC2B (Timer2)
 const uint8_t DIR_PIN = 8;   // Mega: PH5 / OC4C (Timer4)
 static_assert(PWM_PIN == 9 && DIR_PIN == 8, "motorOff()/earlyMotorSafe() 는 D8=PH5, D9=PH6 기준");
-const uint8_t ENC_A   = 2;
-const uint8_t ENC_B   = 3;
+const uint8_t ENC_A   = 3;   // 엔코더 A 선 → D3
+const uint8_t ENC_B   = 2;   // 엔코더 B 선 → D2
 const uint8_t POT_PIN = A0;
 
 const long BAUD = 250000;
 
-// ── 각도 캘리브레이션 (잠정값: sketch_jul5a 의 값, TEST 1 에서 갱신) ──────────
-int potUp   = 576;
-int potDown = 40;
+// ── 각도 캘리브레이션 (잠정값, TEST 1 에서 갱신) ─────────────────────────────
+// 현재 장비 관찰값: 직립 raw ≈ 47~52, 하향 안정 raw ≈ 570 (TEST 1 capture 전 대략값)
+int potUp   = 50;
+int potDown = 570;
+// 학부생 baseline 과 같은 부호: raw 가 커지면 theta 감소 (하향 → 약 -180°).
+// theta 의 +방향과 카트 +x 방향의 관계는 아직 확인하지 않음 (TEST 1 cright/cleft).
+const int ANGLE_SIGN = -1;
 
 // ── 모터 안전 설정 (TEST 5) ──────────────────────────────────────────────────
 const int           HARD_PWM_CAP   = 150;   // 명령으로도 넘을 수 없는 절대 상한
 int                 softPwmMax     = 60;    // 'm' 명령으로 조정 (≤ HARD_PWM_CAP)
-long                posLimit       = 600;   // |enc| 한계 [count], 'k' 로 조정
-long                velLimit       = 2000;  // |속도| 한계 [count/s], 'v' 로 조정
+long                posLimit       = 600;   // |enc| 한계 [count] (≈ 6.3 cm, 보정 환산 기준), 'k' 로 조정
+long                velLimit       = 2000;  // |속도| 한계 [count/s] (≈ 0.21 m/s), 'v' 로 조정
 unsigned int        pulseMs        = 400;   // 펄스 길이, 't' 로 조정
 const unsigned int  PULSE_MS_MAX   = 3000;
 const unsigned int  PROBE_MS       = 30;    // 배선 probe (DIR=HIGH, PWM=0)
@@ -168,7 +178,7 @@ float wrap180(float a) {
 
 float thetaFromRaw(float raw) {
   if (potUp == potDown) return 0.0f;
-  return wrap180((potUp - raw) * 180.0f / (float)(potUp - potDown));
+  return wrap180(ANGLE_SIGN * (raw - potUp) * 180.0f / fabsf((float)(potDown - potUp)));
 }
 
 // downward 기준 편차 (theta=±180 → 0)
@@ -584,7 +594,8 @@ void printHelp() {
     case M_T4:
       Serial.println(F("# T4 (모터 OFF): 고정주기 각도 기록  F,t_us,raw,theta_deg,phi_down_deg"));
       Serial.println(F("#  s 시작 | x 중지 | T<us> 주기(기본 2000) | d<sec> 길이(기본 30)"));
-      Serial.println(F("#  주의: downward 부근은 포텐셔미터 dead zone 근처. 진폭 약 10° 이내로."));
+      Serial.println(F("#  하향 raw≈570 은 ADC 중간 영역. 직립 raw≈50 쪽이 포텐셔미터 dead zone(raw 0) 근처."));
+      Serial.println(F("#  자유진동은 진폭 약 10° 이내로 (선형 영역 감쇠 측정)."));
       break;
 #if ENABLE_MOTOR_TEST
     case M_T5:
